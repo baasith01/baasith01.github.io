@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arun Kumar | Portfolio</title>
+    <title>Sulthan Baasith | Portfolio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase Browser Bundle Framework Integration Layer -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -209,9 +210,7 @@
             color: #e65100;
         }
 
-        /* ==============================
-           1. HOME PAGE STYLE
-        ============================== */
+        /* --- SECTIONS LAYOUT --- */
         .home-container {
             display: flex;
             min-height: 100vh;
@@ -287,9 +286,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
-        /* ==============================
-           2. ABOUT PAGE STYLE
-        ============================== */
         .about-content {
             display: flex;
             align-items: center;
@@ -334,9 +330,6 @@
             white-space: pre-wrap;
         }
 
-        /* ==============================
-           3. PROJECTS PAGE STYLE
-        ============================== */
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -383,9 +376,6 @@
             line-height: 1.5;
         }
 
-        /* ==============================
-           4. CONTACT PAGE STYLE
-        ============================== */
         .contact-container {
             display: flex;
             gap: 50px;
@@ -460,9 +450,6 @@
             border-radius: 50%;
         }
 
-        /* ==============================
-           5. ADMIN LOGIN PAGE STYLE
-        ============================== */
         .login-wrapper {
             display: flex;
             justify-content: center;
@@ -485,7 +472,6 @@
             text-align: center;
         }
 
-        /* Responsive Layouts */
         @media (max-width: 992px) {
             .home-container { flex-direction: column; }
             .home-right { clip-path: none; min-height: 50vh; padding: 40px 0;}
@@ -503,7 +489,7 @@
     </div>
 
     <header id="main-header">
-        <div class="logo"><span id="lbl-header-logo">Arun Kumar</span><span>.</span></div>
+        <div class="logo"><span id="lbl-header-logo">Sulthan Baasith</span><span>.</span></div>
         <nav>
             <ul>
                 <li><a id="nav-home" onclick="switchPage('home', this)" class="nav-link active">Home</a></li>
@@ -527,7 +513,7 @@
             <div class="home-left">
                 <div class="admin-editable">
                     <h3 id="lbl-home-greeting">Hello I'm</h3>
-                    <h1 id="lbl-home-name">Arun Kumar</h1>
+                    <h1 id="lbl-home-name">Sulthan Baasith</h1>
                     <h4 id="lbl-home-title">Professional Freelance Web Designer</h4>
                     <p id="lbl-home-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.</p>
                     
@@ -573,7 +559,7 @@
             </div>
             <div class="about-text-side">
                 <div class="admin-editable">
-                    <p class="desc" id="lbl-about-p1">I am a passionate frontend developer and user interface UI/UX architect specializing in crafting precise digital layouts. With over 5 years of industry practice translating high-fidelity prototypes into living applications, my focus rests entirely on clean code standards and scalable design patterns.</p>
+                    <p class="desc" id="lbl-about-p1">I am a passionate frontend developer specializing in crafting precise digital layouts. With core industry practice translating prototypes into living web apps, my focus rests entirely on clean code standards and scalable design patterns.</p>
                     <p class="desc" id="lbl-about-p2">Every project built focuses explicitly on responsive screen consistency, swift execution times, and interactive accessibility workflows standard across modern devices.</p>
                     
                     <div class="edit-controls">
@@ -590,7 +576,6 @@
         <div class="section-title">
             <h2>My Recent Projects</h2>
         </div>
-
         <div class="projects-grid">
             <div class="project-card admin-editable">
                 <div id="img-proj-1" class="project-img-holder" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=500&q=80');"></div>
@@ -643,7 +628,6 @@
         <div class="section-title">
             <h2>Contact Me Anytime</h2>
         </div>
-
         <div class="contact-container">
             <form id="contactForm" class="contact-form" action="https://formspree.io/f/maqzppgq" method="POST" onsubmit="handleFormspreeSubmit(event)">
                 <div class="form-group">
@@ -656,7 +640,6 @@
                     <textarea name="message" placeholder="Your Message Project Details..." required></textarea>
                 </div>
                 <button type="submit" id="btnContactSubmit" class="btn-teal">Send Message</button>
-                
                 <div id="formStatusBox" class="form-status"></div>
             </form>
             
@@ -703,8 +686,6 @@
                     
                     <div class="admin-section-box">
                         <h3><i class="fa-solid fa-share-nodes"></i> Update Social Media URLs</h3>
-                        <p style="font-size:11px; color:#555; margin-bottom:12px;">Paste your new profile links below to change the sidebar icons destinations:</p>
-                        
                         <div style="margin-bottom:10px;">
                             <label><i class="fa-brands fa-facebook-f"></i> Facebook URL:</label>
                             <input type="text" id="input-url-facebook" style="width:100%; padding:6px; margin-top:4px;" oninput="document.getElementById('lnk-facebook').href = this.value">
@@ -723,7 +704,6 @@
                         </div>
                         <button class="btn-teal" style="width:100%; padding:8px; font-size:13px;" onclick="saveAllToStorage()">Save New Social Handles</button>
                     </div>
-
                     <button class="btn-teal" onclick="logoutAdmin()" style="width:100%; margin-top:20px; background:#555;">Securely Logout</button>
                 </div>
 
@@ -746,9 +726,7 @@
             sections.forEach(sec => sec.classList.remove('active-page'));
 
             const targetSection = document.getElementById(sectionId);
-            if(targetSection) {
-                targetSection.classList.add('active-page');
-            }
+            if(targetSection) targetSection.classList.add('active-page');
 
             const links = document.querySelectorAll('.nav-link');
             links.forEach(link => link.classList.remove('active'));
@@ -759,7 +737,6 @@
                 const correspondingNavLink = document.getElementById('nav-' + sectionId);
                 if(correspondingNavLink) correspondingNavLink.classList.add('active');
             }
-            
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
@@ -776,63 +753,50 @@
             
             button.disabled = true;
             button.innerText = "Sending Message...";
-            
-            statusBox.className = "form-status";
             statusBox.style.display = "none";
 
-            const data = new FormData(form);
-            
             fetch(form.action, {
                 method: form.method,
-                body: data,
-                headers: {
-                    'Accept': 'application/json'
-                }
+                body: new FormData(form),
+                headers: { 'Accept': 'application/json' }
             }).then(response => {
                 button.disabled = false;
                 button.innerText = "Send Message";
-                
                 if (response.ok) {
                     statusBox.innerText = "Thanks! Your message has been sent successfully.";
                     statusBox.className = "form-status success";
                     form.reset();
                 } else {
-                    response.json().then(data => {
-                        if (Object.hasOwn(data, 'errors')) {
-                            statusBox.innerText = data.errors.map(error => error.message).join(", ");
-                        } else {
-                            statusBox.innerText = "Oops! Something went wrong while dispatching.";
-                        }
-                        statusBox.className = "form-status error";
-                    });
+                    statusBox.innerText = "Oops! Something went wrong while dispatching.";
+                    statusBox.className = "form-status error";
                 }
-            }).catch(error => {
+            }).catch(() => {
                 button.disabled = false;
                 button.innerText = "Send Message";
-                statusBox.innerText = "Network connection failure. Please verify connectivity.";
+                statusBox.innerText = "Network failure. Please verify connectivity.";
                 statusBox.className = "form-status error";
             });
         }
 
+        // --- SUPABASE CONFIGURATION MATRIX ---
         const SUPABASE_URL = "https://ksvsundfhridqhewgqxn.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdnN1bmRmaHJpZHFoZXdncXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNDM1MTAsImV4cCI6MjA5NjgxOTUxMH0.h2GVhB_B7SWR2Va9PWBLBQJ9e41YLr9R1JvCKdqWmWU";
         
-        // Use window['supabase'] or a distinct local variable descriptor to cleanly isolate from CDN automatic instantiation hooks
         let cloudDatabase = null;
         try {
             if (window.supabase && typeof window.supabase.createClient === 'function') {
                 cloudDatabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             }
         } catch(e) {
-            console.error("Cloud database hook failed to launch cleanly:", e);
+            console.error("Cloud database synchronization framework failed initialization:", e);
         }
 
         function handleImageUpload(inputElement, targetDisplayId, storageKey, isBackground = false) {
             const file = inputElement.files[0];
             if (!file) return;
 
-            if (file.size > 1.5 * 1024 * 1024) { 
-                alert("To avoid database row constraints on free tiers, keep images under 1.5MB.");
+            if (file.size > 1.2 * 1024 * 1024) {
+                alert("To prevent payload limits on free-tier database tables, keep image files under 1.2MB.");
                 inputElement.value = "";
                 return;
             }
@@ -840,7 +804,6 @@
             const reader = new FileReader();
             reader.onload = async function(e) {
                 const base64Data = e.target.result;
-                
                 if (isBackground) {
                     document.getElementById(targetDisplayId).style.backgroundImage = `url('${base64Data}')`;
                 } else {
@@ -850,11 +813,11 @@
                 if (cloudDatabase) {
                     try {
                         const { error } = await cloudDatabase
-                            .from('portfolio_settings')
+                            .from('portfolio_content')
                             .upsert({ key: storageKey, value: base64Data }, { onConflict: 'key' });
                         if (error) throw error;
                     } catch(err) {
-                        console.error("Failed uploading image string:", err.message);
+                        console.error("Failed uploading image payload:", err.message);
                     }
                 }
             };
@@ -882,48 +845,32 @@
 
         function activateAdminMode() {
             document.body.classList.add('admin-logged-in');
-            const banner = document.getElementById('adminBanner');
-            if(banner) banner.style.display = "block";
-            
-            const form = document.getElementById('login-form-element');
-            if(form) form.style.display = "none";
-            
-            const logoutInterface = document.getElementById('logout-interface');
-            if(logoutInterface) logoutInterface.style.display = "block";
-            
-            const titleCard = document.getElementById('login-title-card');
-            if(titleCard) titleCard.innerText = "Session Settings Active";
+            document.getElementById('adminBanner').style.display = "block";
+            document.getElementById('login-form-element').style.display = "none";
+            document.getElementById('logout-interface').style.display = "block";
+            document.getElementById('login-title-card').innerText = "Session Settings Active";
         }
 
         function logoutAdmin() {
             sessionStorage.removeItem('portfolio_admin_session');
             document.body.classList.remove('admin-logged-in');
-            
-            const banner = document.getElementById('adminBanner');
-            if(banner) banner.style.display = "none";
-            
-            const form = document.getElementById('login-form-element');
-            if(form) form.style.display = "block";
-            
-            const logoutInterface = document.getElementById('logout-interface');
-            if(logoutInterface) logoutInterface.style.display = "none";
-            
-            const titleCard = document.getElementById('login-title-card');
-            if(titleCard) titleCard.innerText = "Admin Portal";
-            
+            document.getElementById('adminBanner').style.display = "none";
+            document.getElementById('login-form-element').style.display = "block";
+            document.getElementById('logout-interface').style.display = "none";
+            document.getElementById('login-title-card').innerText = "Admin Portal";
             document.getElementById('txtAdminUser').value = "";
             document.getElementById('txtAdminPass').value = "";
-            alert('Admin session closed successfully.');
+            alert('Admin session closed.');
             switchPage('home');
         }
 
         const fieldsToMap = [
-            { labelId: 'lbl-header-logo', inputId: 'input-home-name', key: 'p_name', def: 'Arun Kumar', type: 'text' },
+            { labelId: 'lbl-header-logo', inputId: 'input-home-name', key: 'p_name', def: 'Sulthan Baasith', type: 'text' },
             { labelId: 'lbl-home-greeting', inputId: 'input-home-greeting', key: 'p_greet', def: 'Hello I\'m', type: 'text' },
-            { labelId: 'lbl-home-name', inputId: 'input-home-name', key: 'p_name_h1', def: 'Arun Kumar', type: 'text' },
+            { labelId: 'lbl-home-name', inputId: 'input-home-name', key: 'p_name_h1', def: 'Sulthan Baasith', type: 'text' },
             { labelId: 'lbl-home-title', inputId: 'input-home-title', key: 'p_title', def: 'Professional Freelance Web Designer', type: 'text' },
             { labelId: 'lbl-home-desc', inputId: 'input-home-desc', key: 'p_desc', def: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.', type: 'text' },
-            { labelId: 'lbl-about-p1', inputId: 'input-about-p1', key: 'p_ab1', def: 'I am a passionate frontend developer and user interface UI/UX architect specializing in crafting precise digital layouts. With over 5 years of industry practice translating high-fidelity prototypes into living applications, my focus rests entirely on clean code standards and scalable design patterns.', type: 'text' },
+            { labelId: 'lbl-about-p1', inputId: 'input-about-p1', key: 'p_ab1', def: 'I am a passionate frontend developer specializing in crafting precise digital layouts. With core industry practice translating prototypes into living web apps, my focus rests entirely on clean code standards and scalable design patterns.', type: 'text' },
             { labelId: 'lbl-about-p2', inputId: 'input-about-p2', key: 'p_ab2', def: 'Every project built focuses explicitly on responsive screen consistency, swift execution times, and interactive accessibility workflows standard across modern devices.', type: 'text' },
             { labelId: 'lbl-proj1-title', inputId: 'input-proj1-title', key: 'p_j1_t', def: 'Modern Storefront', type: 'text' },
             { labelId: 'lbl-proj1-desc', inputId: 'input-proj1-desc', key: 'p_j1_d', def: 'A fully integrated headless shopping experience constructed with optimized API layers.', type: 'text' },
@@ -949,10 +896,10 @@
 
         async function saveAllToStorage() {
             if(!cloudDatabase) {
-                alert("Database engine connection is not active.");
+                alert("Database structure configuration links are down.");
                 return;
             }
-            const updates = fieldsToMap.map(item => {
+            const dataPayload = fieldsToMap.map(item => {
                 const inputEl = document.getElementById(item.inputId);
                 return {
                     key: item.key,
@@ -962,71 +909,68 @@
 
             try {
                 const { error } = await cloudDatabase
-                    .from('portfolio_settings')
-                    .upsert(updates, { onConflict: 'key' });
+                    .from('portfolio_content')
+                    .upsert(dataPayload, { onConflict: 'key' });
 
                 if (error) throw error;
-                alert('Cloud database synchronized successfully!');
+                alert('Cloud configurations updated smoothly!');
             } catch (err) {
-                console.error("Cloud synchronization failed:", err.message);
+                console.error("Cloud configuration synchronization failed:", err.message);
                 alert('Failed to save configurations to Supabase.');
             }
         }
 
         async function loadAllFromStorage() {
             if (!cloudDatabase) {
-                applyDefaultConfigurationFallback();
+                applyFallbackData();
                 return;
             }
             try {
                 const { data, error } = await cloudDatabase
-                    .from('portfolio_settings')
+                    .from('portfolio_content')
                     .select('key, value');
 
                 if (error) throw error;
 
                 if (data && data.length > 0) {
                     const settingsMap = {};
-                    data.forEach(row => {
-                        settingsMap[row.key] = row.value;
-                    });
+                    data.forEach(row => { settingsMap[row.key] = row.value; });
 
                     fieldsToMap.forEach(item => {
-                        const liveValue = settingsMap[item.key] !== undefined ? settingsMap[item.key] : item.def;
-                        
+                        const currentVal = settingsMap[item.key] !== undefined ? settingsMap[item.key] : item.def;
                         const inputEl = document.getElementById(item.inputId);
-                        if(inputEl) inputEl.value = liveValue;
+                        if(inputEl) inputEl.value = currentVal;
 
                         if(item.type === 'text') {
                             const labelEl = document.getElementById(item.labelId);
-                            if(labelEl) labelEl.innerText = liveValue;
+                            if(labelEl) labelEl.innerText = currentVal;
                         } else if(item.type === 'href') {
                             const anchorEl = document.getElementById(item.elementId);
-                            if(anchorEl) anchorEl.href = liveValue;
+                            if(anchorEl) anchorEl.href = currentVal;
                         }
                     });
 
                     imageFields.forEach(imgItem => {
-                        const liveData = settingsMap[imgItem.key] !== undefined ? settingsMap[imgItem.key] : imgItem.def;
+                        const base64Str = settingsMap[imgItem.key] !== undefined ? settingsMap[imgItem.key] : imgItem.def;
                         const element = document.getElementById(imgItem.elementId);
                         if (element) {
                             if (imgItem.isBg) {
-                                element.style.backgroundImage = `url('${liveData}')`;
+                                element.style.backgroundImage = `url('${base64Str}')`;
                             } else {
-                                element.src = liveData;
+                                element.src = base64Str;
                             }
                         }
                     });
                 } else {
-                    applyDefaultConfigurationFallback();
+                    applyFallbackData();
                 }
             } catch (err) {
-                console.error("Error retrieving configurations from Supabase:", err.message);
-                applyDefaultConfigurationFallback();
+                console.error("Error connecting to live server:", err.message);
+                applyFallbackData();
             }
         }
 
-        function applyDefaultConfigurationFallback() {
+        function applyFallbackData() {
             fieldsToMap.forEach(item => {
                 const inputEl = document.getElementById(item.inputId);
                 if(inputEl) inputEl.value = item.def;
