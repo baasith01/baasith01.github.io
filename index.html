@@ -645,7 +645,7 @@
         </div>
 
         <div class="contact-container">
-            <form id="contactForm" class="contact-form" action="https://formspree.io/f/mdavljql" method="POST" onsubmit="handleFormspreeSubmit(event)">
+            <form id="contactForm" class="contact-form" action="https://formspree.io/f/maqzppgq" method="POST" onsubmit="handleFormspreeSubmit(event)">
                 <div class="form-group">
                     <input type="text" name="name" placeholder="Your Name" required>
                 </div>
@@ -819,7 +819,8 @@
         const SUPABASE_URL = "https://ksvsundfhridqhewgqxn.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdnN1bmRmaHJpZHFoZXdncXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNDM1MTAsImV4cCI6MjA5NjgxOTUxMH0.h2GVhB_B7SWR2Va9PWBLBQJ9e41YLr9R1JvCKdqWmWU";
         
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Use the browser window explicit global scope to instantiate properly
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // JavaScript Async FileReader & Supabase Image Optimization Pipeline 
         function handleImageUpload(inputElement, targetDisplayId, storageKey, isBackground = false) {
