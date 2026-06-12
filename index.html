@@ -768,7 +768,6 @@
             if(el) el.innerText = val;
         }
 
-        // Formspree AJAX Submission Pipeline Handler
         function handleFormspreeSubmit(event) {
             event.preventDefault();
             const form = event.target;
@@ -815,14 +814,19 @@
             });
         }
 
-        // Integrated Supabase Initializer Setup Block
         const SUPABASE_URL = "https://ksvsundfhridqhewgqxn.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdnN1bmRmaHJpZHFoZXdncXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNDM1MTAsImV4cCI6MjA5NjgxOTUxMH0.h2GVhB_B7SWR2Va9PWBLBQJ9e41YLr9R1JvCKdqWmWU";
         
-        // Use the browser window explicit global scope to instantiate properly
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Use window['supabase'] or a distinct local variable descriptor to cleanly isolate from CDN automatic instantiation hooks
+        let cloudDatabase = null;
+        try {
+            if (window.supabase && typeof window.supabase.createClient === 'function') {
+                cloudDatabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch(e) {
+            console.error("Cloud database hook failed to launch cleanly:", e);
+        }
 
-        // JavaScript Async FileReader & Supabase Image Optimization Pipeline 
         function handleImageUpload(inputElement, targetDisplayId, storageKey, isBackground = false) {
             const file = inputElement.files[0];
             if (!file) return;
@@ -843,22 +847,20 @@
                     document.getElementById(targetDisplayId).src = base64Data;
                 }
 
-                // Upsert base64 image strings asynchronously directly to your Supabase cloud mapping table
-                try {
-                    const { error } = await supabase
-                        .from('portfolio_settings')
-                        .upsert({ key: storageKey, value: base64Data }, { onConflict: 'key' });
-                    
-                    if (error) throw error;
-                    console.log(`Image saved to cloud under key: ${storageKey}`);
-                } catch(err) {
-                    console.error("Failed uploading image string:", err.message);
+                if (cloudDatabase) {
+                    try {
+                        const { error } = await cloudDatabase
+                            .from('portfolio_settings')
+                            .upsert({ key: storageKey, value: base64Data }, { onConflict: 'key' });
+                        if (error) throw error;
+                    } catch(err) {
+                        console.error("Failed uploading image string:", err.message);
+                    }
                 }
             };
             reader.readAsDataURL(file);
         }
 
-        // Authentication Account Credentials Details
         const AUTH_CONFIG = {
             user: "baazith_",
             pass: "Baasith125"
@@ -880,47 +882,57 @@
 
         function activateAdminMode() {
             document.body.classList.add('admin-logged-in');
-            document.getElementById('adminBanner').style.display = "block";
-            document.getElementById('login-form-element').style.display = "none";
-            document.getElementById('logout-interface').style.display = "block";
-            document.getElementById('login-title-card').innerText = "Session Settings Active";
+            const banner = document.getElementById('adminBanner');
+            if(banner) banner.style.display = "block";
+            
+            const form = document.getElementById('login-form-element');
+            if(form) form.style.display = "none";
+            
+            const logoutInterface = document.getElementById('logout-interface');
+            if(logoutInterface) logoutInterface.style.display = "block";
+            
+            const titleCard = document.getElementById('login-title-card');
+            if(titleCard) titleCard.innerText = "Session Settings Active";
         }
 
         function logoutAdmin() {
             sessionStorage.removeItem('portfolio_admin_session');
             document.body.classList.remove('admin-logged-in');
-            document.getElementById('adminBanner').style.display = "none";
-            document.getElementById('login-form-element').style.display = "block";
-            document.getElementById('logout-interface').style.display = "none";
-            document.getElementById('login-title-card').innerText = "Admin Portal";
+            
+            const banner = document.getElementById('adminBanner');
+            if(banner) banner.style.display = "none";
+            
+            const form = document.getElementById('login-form-element');
+            if(form) form.style.display = "block";
+            
+            const logoutInterface = document.getElementById('logout-interface');
+            if(logoutInterface) logoutInterface.style.display = "none";
+            
+            const titleCard = document.getElementById('login-title-card');
+            if(titleCard) titleCard.innerText = "Admin Portal";
+            
             document.getElementById('txtAdminUser').value = "";
             document.getElementById('txtAdminPass').value = "";
             alert('Admin session closed successfully.');
             switchPage('home');
         }
 
-        // Map definitions for components, input connections, and keys
         const fieldsToMap = [
             { labelId: 'lbl-header-logo', inputId: 'input-home-name', key: 'p_name', def: 'Arun Kumar', type: 'text' },
             { labelId: 'lbl-home-greeting', inputId: 'input-home-greeting', key: 'p_greet', def: 'Hello I\'m', type: 'text' },
             { labelId: 'lbl-home-name', inputId: 'input-home-name', key: 'p_name_h1', def: 'Arun Kumar', type: 'text' },
             { labelId: 'lbl-home-title', inputId: 'input-home-title', key: 'p_title', def: 'Professional Freelance Web Designer', type: 'text' },
             { labelId: 'lbl-home-desc', inputId: 'input-home-desc', key: 'p_desc', def: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.', type: 'text' },
-            
             { labelId: 'lbl-about-p1', inputId: 'input-about-p1', key: 'p_ab1', def: 'I am a passionate frontend developer and user interface UI/UX architect specializing in crafting precise digital layouts. With over 5 years of industry practice translating high-fidelity prototypes into living applications, my focus rests entirely on clean code standards and scalable design patterns.', type: 'text' },
             { labelId: 'lbl-about-p2', inputId: 'input-about-p2', key: 'p_ab2', def: 'Every project built focuses explicitly on responsive screen consistency, swift execution times, and interactive accessibility workflows standard across modern devices.', type: 'text' },
-            
             { labelId: 'lbl-proj1-title', inputId: 'input-proj1-title', key: 'p_j1_t', def: 'Modern Storefront', type: 'text' },
             { labelId: 'lbl-proj1-desc', inputId: 'input-proj1-desc', key: 'p_j1_d', def: 'A fully integrated headless shopping experience constructed with optimized API layers.', type: 'text' },
             { labelId: 'lbl-proj2-title', inputId: 'input-proj2-title', key: 'p_j2_t', def: 'Analytics Dashboard', type: 'text' },
             { labelId: 'lbl-proj2-desc', inputId: 'input-proj2-desc', key: 'p_j2_d', def: 'Realtime operational data visibility engine complete with complex charting blocks.', type: 'text' },
             { labelId: 'lbl-proj3-title', inputId: 'input-proj3-title', key: 'p_j3_t', def: 'Brand Identity Site', type: 'text' },
             { labelId: 'lbl-proj3-desc', inputId: 'input-proj3-desc', key: 'p_j3_d', def: 'Fluid graphical web hub optimized strictly for interactive animation portfolios.', type: 'text' },
-            
             { labelId: 'lbl-contact-email', inputId: 'input-contact-email', key: 'p_c_e', def: 'hello@johnsmith.com', type: 'text' },
             { labelId: 'lbl-contact-phone', inputId: 'input-contact-phone', key: 'p_c_p', def: '+1 (555) 019-2834', type: 'text' },
-
-            // Social handles
             { elementId: 'lnk-facebook', inputId: 'input-url-facebook', key: 'url_fb', def: 'https://facebook.com', type: 'href' },
             { elementId: 'lnk-twitter', inputId: 'input-url-twitter', key: 'url_tw', def: 'https://twitter.com', type: 'href' },
             { elementId: 'lnk-instagram', inputId: 'input-url-instagram', key: 'url_ig', def: 'https://instagram.com', type: 'href' },
@@ -935,8 +947,11 @@
             { elementId: 'img-proj-3', key: 'img_j3', def: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=500&q=80', isBg: true }
         ];
 
-        // Asynchronous Supabase Cloud Synchronization Pipeline (Upsert Engine)
         async function saveAllToStorage() {
+            if(!cloudDatabase) {
+                alert("Database engine connection is not active.");
+                return;
+            }
             const updates = fieldsToMap.map(item => {
                 const inputEl = document.getElementById(item.inputId);
                 return {
@@ -946,7 +961,7 @@
             });
 
             try {
-                const { error } = await supabase
+                const { error } = await cloudDatabase
                     .from('portfolio_settings')
                     .upsert(updates, { onConflict: 'key' });
 
@@ -954,14 +969,17 @@
                 alert('Cloud database synchronized successfully!');
             } catch (err) {
                 console.error("Cloud synchronization failed:", err.message);
-                alert('Failed to save configurations to Supabase. Check developer console.');
+                alert('Failed to save configurations to Supabase.');
             }
         }
 
-        // Asynchronous Data Restructuring Loader from Supabase Cloud
         async function loadAllFromStorage() {
+            if (!cloudDatabase) {
+                applyDefaultConfigurationFallback();
+                return;
+            }
             try {
-                const { data, error } = await supabase
+                const { data, error } = await cloudDatabase
                     .from('portfolio_settings')
                     .select('key, value');
 
@@ -1003,7 +1021,7 @@
                     applyDefaultConfigurationFallback();
                 }
             } catch (err) {
-                console.error("Error retrieving live configurations from Supabase:", err.message);
+                console.error("Error retrieving configurations from Supabase:", err.message);
                 applyDefaultConfigurationFallback();
             }
         }
