@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arun Kumar | Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --primary-teal: #1cb8a1;
+            --dark-blue: #1e2436;
+            --text-muted: #666;
+            --bg-light: #ffffff;
+            --bg-gray: #f9f9f9;
+            --admin-edit-border: #ff9800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--dark-blue);
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGATION BAR --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 10%;
+            position: absolute;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--primary-teal);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--dark-blue);
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        nav ul li a:hover, nav ul li a.active {
+            color: var(--primary-teal);
+            border-bottom: 2px solid var(--primary-teal);
+            padding-bottom: 4px;
+        }
+
+        /* --- FLOATING SOCIAL BAR --- */
+        .social-sidebar {
+            position: fixed;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: white;
+            padding: 15px 10px;
+            border-radius: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+
+        .social-sidebar a {
+            color: #b0b5c1;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        .social-sidebar a:hover {
+            color: var(--primary-teal);
+        }
+
+        /* --- PAGE / SECTION CONTROL --- */
+        .page-section {
+            display: none;
+            min-height: 100vh;
+            padding: 120px 10% 60px 10%;
+        }
+
+        .page-section.active-page {
+            display: block;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-teal {
+            background-color: var(--primary-teal);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-teal:hover {
+            background-color: #169683;
+        }
+
+        .btn-teal:disabled {
+            background-color: #a5d6ce;
+            cursor: not-allowed;
+        }
+
+        /* --- LIVE CMS ADMIN CONTROL LAYERS --- */
+        .admin-editable {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .admin-logged-in .admin-editable:hover {
+            outline: 2px dashed var(--admin-edit-border);
+            outline-offset: 4px;
+        }
+
+        .edit-controls {
+            display: none;
+            background: #fff3e0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--admin-edit-border);
+            margin-top: 10px;
+            font-size: 12px;
+            max-width: 500px;
+        }
+
+        .admin-logged-in .edit-controls {
+            display: block;
+        }
+
+        .edit-controls input[type="text"], .edit-controls textarea {
+            width: 100%;
+            padding: 6px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .edit-controls input[type="file"] {
+            margin: 8px 0;
+            display: block;
+        }
+
+        .admin-top-banner {
+            display: none;
+            background: var(--dark-blue);
+            color: #fff;
+            text-align: center;
+            padding: 8px;
+            font-size: 14px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .admin-top-banner button {
+            background: #e65100;
+            color: white;
+            border: none;
+            padding: 2px 10px;
+            margin-left: 15px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .admin-section-box {
+            background: #fff3e0;
+            border: 2px dashed var(--admin-edit-border);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .admin-section-box h3 {
+            margin-bottom: 15px;
+            color: #e65100;
+        }
+
+        /* ==============================
+           1. HOME PAGE STYLE
+        ============================== */
+        .home-container {
+            display: flex;
+            min-height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .home-left {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 10%;
+            padding-right: 5%;
+            background: white;
+        }
+
+        .home-left h3 {
+            color: var(--primary-teal);
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .home-left h1 {
+            font-size: 56px;
+            color: var(--dark-blue);
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .home-left h4 {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .home-left p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        .home-right {
+            flex: 1;
+            background-color: var(--primary-teal);
+            clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .profile-wrapper {
+            width: 70%;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-img-mock {
+            max-width: 100%;
+            max-height: 100%;
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        /* ==============================
+           2. ABOUT PAGE STYLE
+        ============================== */
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            margin-top: 40px;
+        }
+
+        .about-image-side {
+            flex: 1;
+            text-align: center;
+        }
+
+        .about-box-outline {
+            border: 8px solid var(--primary-teal);
+            display: inline-block;
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 320px;
+            width: 100%;
+        }
+
+        .about-img-mock {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .about-text-side {
+            flex: 1.5;
+        }
+
+        .section-title h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .about-text-side p.desc {
+            line-height: 1.7;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+        }
+
+        /* ==============================
+           3. PROJECTS PAGE STYLE
+        ============================== */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .project-card {
+            background: var(--bg-gray);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-img-holder {
+            height: 200px;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .project-info {
+            padding: 20px;
+        }
+
+        .project-info h3 {
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .project-info p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* ==============================
+           4. CONTACT PAGE STYLE
+        ============================== */
+        .contact-container {
+            display: flex;
+            gap: 50px;
+            margin-top: 40px;
+        }
+
+        .contact-form {
+            flex: 1.5;
+            background: var(--bg-gray);
+            padding: 40px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .form-group textarea {
+            height: 150px;
+            resize: none;
+        }
+
+        .form-status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            display: none;
+        }
+        .form-status.success {
+            display: block;
+            background-color: #e8f8f6;
+            color: #1cb8a1;
+            border: 1px solid #1cb8a1;
+        }
+        .form-status.error {
+            display: block;
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #c62828;
+        }
+
+        .contact-info-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .info-item i {
+            font-size: 24px;
+            color: var(--primary-teal);
+            background: #e8f8f6;
+            padding: 15px;
+            border-radius: 50%;
+        }
+
+        /* ==============================
+           5. ADMIN LOGIN PAGE STYLE
+        ============================== */
+        .login-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 480px;
+            border-top: 5px solid var(--primary-teal);
+        }
+
+        .login-card h2 {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        /* Responsive Layouts */
+        @media (max-width: 992px) {
+            .home-container { flex-direction: column; }
+            .home-right { clip-path: none; min-height: 50vh; padding: 40px 0;}
+            .home-left { padding-top: 140px; }
+            .about-content, .contact-container { flex-direction: column; }
+            .social-sidebar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-top-banner" id="adminBanner">
+        ⚡ You are logged in as Admin. Customization adjustments are active.
+        <button onclick="logoutAdmin()">Logout</button>
+    </div>
+
+    <header id="main-header">
+        <div class="logo"><span id="lbl-header-logo">Arun Kumar</span><span>.</span></div>
+        <nav>
+            <ul>
+                <li><a id="nav-home" onclick="switchPage('home', this)" class="nav-link active">Home</a></li>
+                <li><a id="nav-about" onclick="switchPage('about', this)" class="nav-link">About</a></li>
+                <li><a id="nav-projects" onclick="switchPage('projects', this)" class="nav-link">Projects</a></li>
+                <li><a id="nav-contact" onclick="switchPage('contact', this)" class="nav-link">Contact</a></li>
+                <li><a id="nav-admin" onclick="switchPage('admin', this)" class="nav-link"><i class="fa-solid fa-lock"></i> Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="social-sidebar">
+        <a href="https://facebook.com" id="lnk-facebook" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="https://twitter.com" id="lnk-twitter" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+        <a href="https://instagram.com" id="lnk-instagram" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://linkedin.com" id="lnk-linkedin" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+    </div>
+
+    <div id="home" class="page-section active-page" style="padding:0;">
+        <div class="home-container">
+            <div class="home-left">
+                <div class="admin-editable">
+                    <h3 id="lbl-home-greeting">Hello I'm</h3>
+                    <h1 id="lbl-home-name">Arun Kumar</h1>
+                    <h4 id="lbl-home-title">Professional Freelance Web Designer</h4>
+                    <p id="lbl-home-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.</p>
+                    
+                    <div class="edit-controls">
+                        <label>Greeting:</label><input type="text" id="input-home-greeting" oninput="updateLiveText('lbl-home-greeting', this.value)">
+                        <label>Name:</label><input type="text" id="input-home-name" oninput="updateLiveText('lbl-home-name', this.value); updateLiveText('lbl-header-logo', this.value)">
+                        <label>Title:</label><input type="text" id="input-home-title" oninput="updateLiveText('lbl-home-title', this.value)">
+                        <label>Description:</label><textarea id="input-home-desc" oninput="updateLiveText('lbl-home-desc', this.value)"></textarea>
+                        <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage(this)">Save Home Changes</button>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn-teal" onclick="switchPage('projects', document.getElementById('nav-projects'))">Projects</button>
+                </div>
+            </div>
+            <div class="home-right">
+                <div class="profile-wrapper admin-editable">
+                    <img id="img-home-profile" class="profile-img-mock" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" alt="Profile View">
+                    
+                    <div class="edit-controls" style="position: absolute; bottom: 20px; left: 20px; right: 20px; z-index: 200;">
+                        <label>Upload Profile Image:</label>
+                        <input type="file" id="input-home-img" accept="image/*" onchange="handleImageUpload(this, 'img-home-profile', 'img_hp')">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="about" class="page-section">
+        <div class="section-title">
+            <h2>About Me</h2>
+        </div>
+        <div class="about-content">
+            <div class="about-image-side">
+                <div class="about-box-outline admin-editable">
+                    <img id="img-about-profile" class="about-img-mock" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80" alt="About View">
+                    
+                    <div class="edit-controls">
+                        <label>Upload About Image:</label>
+                        <input type="file" id="input-about-img" accept="image/*" onchange="handleImageUpload(this, 'img-about-profile', 'img_ap')">
+                    </div>
+                </div>
+            </div>
+            <div class="about-text-side">
+                <div class="admin-editable">
+                    <p class="desc" id="lbl-about-p1">I am a passionate frontend developer and user interface UI/UX architect specializing in crafting precise digital layouts. With over 5 years of industry practice translating high-fidelity prototypes into living applications, my focus rests entirely on clean code standards and scalable design patterns.</p>
+                    <p class="desc" id="lbl-about-p2">Every project built focuses explicitly on responsive screen consistency, swift execution times, and interactive accessibility workflows standard across modern devices.</p>
+                    
+                    <div class="edit-controls">
+                        <label>About Paragraph 1:</label><textarea id="input-about-p1" style="height:100px;" oninput="updateLiveText('lbl-about-p1', this.value)"></textarea>
+                        <label>About Paragraph 2:</label><textarea id="input-about-p2" style="height:100px;" oninput="updateLiveText('lbl-about-p2', this.value)"></textarea>
+                        <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage(this)">Save About Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="projects" class="page-section">
+        <div class="section-title">
+            <h2>My Recent Projects</h2>
+        </div>
+
+        <div class="projects-grid">
+            <div class="project-card admin-editable">
+                <div id="img-proj-1" class="project-img-holder" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=500&q=80');"></div>
+                <div class="project-info">
+                    <h3 id="lbl-proj1-title">Modern Storefront</h3>
+                    <p id="lbl-proj1-desc">A fully integrated headless shopping experience constructed with optimized API layers.</p>
+                </div>
+                <div class="edit-controls">
+                    <label>Upload Project Image:</label>
+                    <input type="file" id="input-proj1-img" accept="image/*" onchange="handleImageUpload(this, 'img-proj-1', 'img_j1', true)">
+                    <label>Title:</label><input type="text" id="input-proj1-title" oninput="updateLiveText('lbl-proj1-title', this.value)">
+                    <label>Description:</label><textarea id="input-proj1-desc" oninput="updateLiveText('lbl-proj1-desc', this.value)"></textarea>
+                    <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage(this)">Save Project 1 Text</button>
+                </div>
+            </div>
+            
+            <div class="project-card admin-editable">
+                <div id="img-proj-2" class="project-img-holder" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80');"></div>
+                <div class="project-info">
+                    <h3 id="lbl-proj2-title">Analytics Dashboard</h3>
+                    <p id="lbl-proj2-desc">Realtime operational data visibility engine complete with complex charting blocks.</p>
+                </div>
+                <div class="edit-controls">
+                    <label>Upload Project Image:</label>
+                    <input type="file" id="input-proj2-img" accept="image/*" onchange="handleImageUpload(this, 'img-proj-2', 'img_j2', true)">
+                    <label>Title:</label><input type="text" id="input-proj2-title" oninput="updateLiveText('lbl-proj2-title', this.value)">
+                    <label>Description:</label><textarea id="input-proj2-desc" oninput="updateLiveText('lbl-proj2-desc', this.value)"></textarea>
+                    <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage(this)">Save Project 2 Text</button>
+                </div>
+            </div>
+
+            <div class="project-card admin-editable">
+                <div id="img-proj-3" class="project-img-holder" style="background-image: url('https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=500&q=80');"></div>
+                <div class="project-info">
+                    <h3 id="lbl-proj3-title">Brand Identity Site</h3>
+                    <p id="lbl-proj3-desc">Fluid graphical web hub optimized strictly for interactive animation portfolios.</p>
+                </div>
+                <div class="edit-controls">
+                    <label>Upload Project Image:</label>
+                    <input type="file" id="input-proj3-img" accept="image/*" onchange="handleImageUpload(this, 'img-proj-3', 'img_j3', true)">
+                    <label>Title:</label><input type="text" id="input-proj3-title" oninput="updateLiveText('lbl-proj3-title', this.value)">
+                    <label>Description:</label><textarea id="input-proj3-desc" oninput="updateLiveText('lbl-proj3-desc', this.value)"></textarea>
+                    <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage(this)">Save Project 3 Text</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="contact" class="page-section">
+        <div class="section-title">
+            <h2>Contact Me Anytime</h2>
+        </div>
+
+        <div class="contact-container">
+            <form id="contactForm" class="contact-form" action="https://formspree.io/f/mdavljql" method="POST" onsubmit="handleFormspreeSubmit(event)">
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Your Email Address" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="message" placeholder="Your Message Project Details..." required></textarea>
+                </div>
+                <button type="submit" id="btnContactSubmit" class="btn-teal">Send Message</button>
+                
+                <div id="formStatusBox" class="form-status"></div>
+            </form>
+            
+            <div class="contact-info-side">
+                <div class="admin-editable">
+                    <div class="info-item">
+                        <i class="fa-solid fa-envelope"></i>
+                        <div>
+                            <h3>Email</h3>
+                            <p id="lbl-contact-email">hello@johnsmith.com</p>
+                        </div>
+                    </div>
+                    <div class="edit-controls">
+                        <label>Contact Email:</label>
+                        <input type="text" id="input-contact-email" oninput="updateLiveText('lbl-contact-email', this.value)">
+                    </div>
+                </div>
+                
+                <div class="admin-editable">
+                    <div class="info-item">
+                        <i class="fa-solid fa-phone"></i>
+                        <div>
+                            <h3>Phone Support</h3>
+                            <p id="lbl-contact-phone">+1 (555) 019-2834</p>
+                        </div>
+                    </div>
+                    <div class="edit-controls">
+                        <label>Contact Phone:</label>
+                        <input type="text" id="input-contact-phone" oninput="updateLiveText('lbl-contact-phone', this.value)">
+                        <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage(this)">Save Contact Info</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin" class="page-section">
+        <div class="login-wrapper">
+            <div class="login-card">
+                <h2 id="login-title-card">Admin Portal</h2>
+                
+                <div id="logout-interface" style="display:none;">
+                    <p style="margin-bottom:20px; color: green; font-weight:600; text-align:center;">You are logged in successfully.</p>
+                    
+                    <div class="admin-section-box">
+                        <h3><i class="fa-solid fa-share-nodes"></i> Update Social Media URLs</h3>
+                        <p style="font-size:11px; color:#555; margin-bottom:12px;">Paste your new profile links below to change the sidebar icons destinations:</p>
+                        
+                        <div style="margin-bottom:10px;">
+                            <label><i class="fa-brands fa-facebook-f"></i> Facebook URL:</label>
+                            <input type="text" id="input-url-facebook" style="width:100%; padding:6px; margin-top:4px;" oninput="document.getElementById('lnk-facebook').href = this.value">
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label><i class="fa-brands fa-twitter"></i> Twitter URL:</label>
+                            <input type="text" id="input-url-twitter" style="width:100%; padding:6px; margin-top:4px;" oninput="document.getElementById('lnk-twitter').href = this.value">
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label><i class="fa-brands fa-instagram"></i> Instagram URL:</label>
+                            <input type="text" id="input-url-instagram" style="width:100%; padding:6px; margin-top:4px;" oninput="document.getElementById('lnk-instagram').href = this.value">
+                        </div>
+                        <div style="margin-bottom:15px;">
+                            <label><i class="fa-brands fa-linkedin-in"></i> LinkedIn URL:</label>
+                            <input type="text" id="input-url-linkedin" style="width:100%; padding:6px; margin-top:4px;" oninput="document.getElementById('lnk-linkedin').href = this.value">
+                        </div>
+                        <button class="btn-teal" style="width:100%; padding:8px; font-size:13px;" onclick="saveAllToStorage(this)">Save New Social Handles</button>
+                    </div>
+
+                    <button class="btn-teal" onclick="logoutAdmin()" style="width:100%; margin-top:20px; background:#555;">Securely Logout</button>
+                </div>
+
+                <form id="login-form-element" onsubmit="validateAdminAccess(event)">
+                    <div class="form-group">
+                        <input type="text" id="txtAdminUser" placeholder="Admin Username" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="txtAdminPass" placeholder="Security Password" required>
+                    </div>
+                    <button type="submit" class="btn-teal" style="width: 100%;">Authenticate</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase Initialization Credentials
+        const SUPABASE_URL = "https://oigswmxqdtbxgqgyndbh.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9pZ3N3bXhxZHRieGdxZ3luZGJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMzc3NzksImV4cCI6MjA5NjgxMzc3OX0.C-iWTDiZMnw7iBaS_ST7mBmPV6ALMWeBj87dor4kMDA";
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        function switchPage(sectionId, element) {
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(sec => sec.classList.remove('active-page'));
+
+            const targetSection = document.getElementById(sectionId);
+            if(targetSection) {
+                targetSection.classList.add('active-page');
+            }
+
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(link => link.classList.remove('active'));
+            
+            if(element) {
+                element.classList.add('active');
+            } else {
+                const correspondingNavLink = document.getElementById('nav-' + sectionId);
+                if(correspondingNavLink) correspondingNavLink.classList.add('active');
+            }
+            
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function updateLiveText(targetId, val) {
+            const el = document.getElementById(targetId);
+            if(el) el.innerText = val;
+        }
+
+        // Formspree AJAX Submission Pipeline Handler
+        function handleFormspreeSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const button = document.getElementById('btnContactSubmit');
+            const statusBox = document.getElementById('formStatusBox');
+            
+            button.disabled = true;
+            button.innerText = "Sending Message...";
+            
+            statusBox.className = "form-status";
+            statusBox.style.display = "none";
+
+            const data = new FormData(form);
+            
+            fetch(form.action, {
+                method: form.method,
+                body: data,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                button.disabled = false;
+                button.innerText = "Send Message";
+                
+                if (response.ok) {
+                    statusBox.innerText = "Thanks! Your message has been sent successfully.";
+                    statusBox.className = "form-status success";
+                    form.reset();
+                } else {
+                    response.json().then(data => {
+                        if (Object.hasOwn(data, 'errors')) {
+                            statusBox.innerText = data.errors.map(error => error.message).join(", ");
+                        } else {
+                            statusBox.innerText = "Oops! Something went wrong while dispatching.";
+                        }
+                        statusBox.className = "form-status error";
+                    });
+                }
+            }).catch(error => {
+                button.disabled = false;
+                button.innerText = "Send Message";
+                statusBox.innerText = "Network connection failure. Please verify connectivity.";
+                statusBox.className = "form-status error";
+            });
+        }
+
+        // JavaScript File Reader Pipeline synchronized with Supabase
+        function handleImageUpload(inputElement, targetDisplayId, storageKey, isBackground = false) {
+            const file = inputElement.files[0];
+            if (!file) return;
+
+            // Restrict base64 payloads on database records to keep performance smooth
+            if (file.size > 1.2 * 1024 * 1024) {
+                alert("Please optimize your asset size under 1.2MB to verify storage updates cleanly.");
+                inputElement.value = "";
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64Data = e.target.result;
+                
+                if (isBackground) {
+                    document.getElementById(targetDisplayId).style.backgroundImage = `url('${base64Data}')`;
+                } else {
+                    document.getElementById(targetDisplayId).src = base64Data;
+                }
+
+                try {
+                    const { error } = await supabaseClient
+                        .from('portfolio_content')
+                        .upsert({ key: storageKey, value: base64Data }, { onConflict: 'key' });
+                    
+                    if (error) throw error;
+                    console.log("Image state asset pushed to cloud database successfully: " + storageKey);
+                } catch(err) {
+                    console.error("Failed uploading image payload:", err.message);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Authentication Account Credentials Details
+        const AUTH_CONFIG = {
+            user: "arunkumarkaliappan",
+            pass: "Arun@123"
+        };
+
+        function validateAdminAccess(e) {
+            e.preventDefault();
+            const uInput = document.getElementById('txtAdminUser').value.trim();
+            const pInput = document.getElementById('txtAdminPass').value;
+
+            if(uInput === AUTH_CONFIG.user && pInput === AUTH_CONFIG.pass) {
+                sessionStorage.setItem('portfolio_admin_session', 'authenticated');
+                activateAdminMode();
+                alert('Welcome back! Configuration options are ready.');
+            } else {
+                alert('Error: Invalid credentials supplied.');
+            }
+        }
+
+        function activateAdminMode() {
+            document.body.classList.add('admin-logged-in');
+            document.getElementById('adminBanner').style.display = "block";
+            document.getElementById('login-form-element').style.display = "none";
+            document.getElementById('logout-interface').style.display = "block";
+            document.getElementById('login-title-card').innerText = "Session Settings Active";
+        }
+
+        function logoutAdmin() {
+            sessionStorage.removeItem('portfolio_admin_session');
+            document.body.classList.remove('admin-logged-in');
+            document.getElementById('adminBanner').style.display = "none";
+            document.getElementById('login-form-element').style.display = "block";
+            document.getElementById('logout-interface').style.display = "none";
+            document.getElementById('login-title-card').innerText = "Admin Portal";
+            document.getElementById('txtAdminUser').value = "";
+            document.getElementById('txtAdminPass').value = "";
+            alert('Admin session closed successfully.');
+            switchPage('home');
+        }
+
+        // Cloud Core Key-Value Map configurations
+        const fieldsToMap = [
+            { labelId: 'lbl-header-logo', inputId: 'input-home-name', key: 'p_name', def: 'Arun Kumar', type: 'text' },
+            { labelId: 'lbl-home-greeting', inputId: 'input-home-greeting', key: 'p_greet', def: 'Hello I\'m', type: 'text' },
+            { labelId: 'lbl-home-name', inputId: 'input-home-name', key: 'p_name_h1', def: 'Arun Kumar', type: 'text' },
+            { labelId: 'lbl-home-title', inputId: 'input-home-title', key: 'p_title', def: 'Professional Freelance Web Designer', type: 'text' },
+            { labelId: 'lbl-home-desc', inputId: 'input-home-desc', key: 'p_desc', def: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.', type: 'text' },
+            
+            { labelId: 'lbl-about-p1', inputId: 'input-about-p1', key: 'p_ab1', def: 'I am a passionate frontend developer and user interface UI/UX architect specializing in crafting precise digital layouts. With over 5 years of industry practice translating high-fidelity prototypes into living applications, my focus rests entirely on clean code standards and scalable design patterns.', type: 'text' },
+            { labelId: 'lbl-about-p2', inputId: 'input-about-p2', key: 'p_ab2', def: 'Every project built focuses explicitly on responsive screen consistency, swift execution times, and interactive accessibility workflows standard across modern devices.', type: 'text' },
+            
+            { labelId: 'lbl-proj1-title', inputId: 'input-proj1-title', key: 'p_j1_t', def: 'Modern Storefront', type: 'text' },
+            { labelId: 'lbl-proj1-desc', inputId: 'input-proj1-desc', key: 'p_j1_d', def: 'A fully integrated headless shopping experience constructed with optimized API layers.', type: 'text' },
+            { labelId: 'lbl-proj2-title', inputId: 'input-proj2-title', key: 'p_j2_t', def: 'Analytics Dashboard', type: 'text' },
+            { labelId: 'lbl-proj2-desc', inputId: 'input-proj2-desc', key: 'p_j2_d', def: 'Realtime operational data visibility engine complete with complex charting blocks.', type: 'text' },
+            { labelId: 'lbl-proj3-title', inputId: 'input-proj3-title', key: 'p_j3_t', def: 'Brand Identity Site', type: 'text' },
+            { labelId: 'lbl-proj3-desc', inputId: 'input-proj3-desc', key: 'p_j3_d', def: 'Fluid graphical web hub optimized strictly for interactive animation portfolios.', type: 'text' },
+            
+            { labelId: 'lbl-contact-email', inputId: 'input-contact-email', key: 'p_c_e', def: 'hello@johnsmith.com', type: 'text' },
+            { labelId: 'lbl-contact-phone', inputId: 'input-contact-phone', key: 'p_c_p', def: '+1 (555) 019-2834', type: 'text' },
+
+            // Social links
+            { elementId: 'lnk-facebook', inputId: 'input-url-facebook', key: 'url_fb', def: 'https://facebook.com', type: 'href' },
+            { elementId: 'lnk-twitter', inputId: 'input-url-twitter', key: 'url_tw', def: 'https://twitter.com', type: 'href' },
+            { elementId: 'lnk-instagram', inputId: 'input-url-instagram', key: 'url_ig', def: 'https://instagram.com', type: 'href' },
+            { elementId: 'lnk-linkedin', inputId: 'input-url-linkedin', key: 'url_li', def: 'https://linkedin.com', type: 'href' }
+        ];
+
+        const imageFields = [
+            { elementId: 'img-home-profile', key: 'img_hp', def: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80', isBg: false },
+            { elementId: 'img-about-profile', key: 'img_ap', def: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80', isBg: false },
+            { elementId: 'img-proj-1', key: 'img_j1', def: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=500&q=80', isBg: true },
+            { elementId: 'img-proj-2', key: 'img_j2', def: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80', isBg: true },
+            { elementId: 'img-proj-3', key: 'img_j3', def: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=500&q=80', isBg: true }
+        ];
+
+        // Global asynchronous bulk saving algorithm via Supabase Upsert
+        async function saveAllToStorage(btnElement) {
+            let originalText = "Save Changes";
+            if (btnElement) {
+                originalText = btnElement.innerText;
+                btnElement.disabled = true;
+                btnElement.innerText = "Syncing Cloud...";
+            }
+
+            const updates = fieldsToMap.map(item => {
+                const inputEl = document.getElementById(item.inputId);
+                return {
+                    key: item.key,
+                    value: inputEl ? inputEl.value : item.def
+                };
+            });
+
+            try {
+                const { error } = await supabaseClient
+                    .from('portfolio_content')
+                    .upsert(updates, { onConflict: 'key' });
+
+                if (error) throw error;
+                alert('Cloud database updated successfully! Changes are live on all devices.');
+            } catch (err) {
+                console.error("Cloud saving operation failure:", err.message);
+                alert('Synchronization Error: Make sure your RLS policies match database configurations.');
+            } finally {
+                if (btnElement) {
+                    btnElement.disabled = false;
+                    btnElement.innerText = originalText;
+                }
+            }
+        }
+
+        // Global asynchronous database read algorithm
+        async function loadAllFromStorage() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('portfolio_content')
+                    .select('key, value');
+
+                if (error) throw error;
+
+                // Turn our query data rows array into a simple lookup object map
+                const contentMap = {};
+                if (data) {
+                    data.forEach(row => {
+                        contentMap[row.key] = row.value;
+                    });
+                }
+
+                // Inject text configuration maps into document nodes
+                fieldsToMap.forEach(item => {
+                    const finalValue = contentMap[item.key] !== undefined ? contentMap[item.key] : item.def;
+                    
+                    const inputEl = document.getElementById(item.inputId);
+                    if(inputEl) inputEl.value = finalValue;
+
+                    if(item.type === 'text') {
+                        const labelEl = document.getElementById(item.labelId);
+                        if(labelEl) labelEl.innerText = finalValue;
+                    } else if(item.type === 'href') {
+                        const anchorEl = document.getElementById(item.elementId);
+                        if(anchorEl) anchorEl.href = finalValue;
+                    }
+                });
+
+                // Inject layout asset maps into image fields nodes
+                imageFields.forEach(imgItem => {
+                    const finalData = contentMap[imgItem.key] !== undefined ? contentMap[imgItem.key] : imgItem.def;
+                    const element = document.getElementById(imgItem.elementId);
+                    if (element) {
+                        if (imgItem.isBg) {
+                            element.style.backgroundImage = `url('${finalData}')`;
+                        } else {
+                            element.src = finalData;
+                        }
+                    }
+                });
+
+            } catch (err) {
+                console.error("Cloud loading operation failure. Using fallback defaults:", err.message);
+                // Fallback default setup if connection is interrupted or row values are empty
+                fieldsToMap.forEach(item => {
+                    const inputEl = document.getElementById(item.inputId);
+                    if(inputEl) inputEl.value = item.def;
+                    if(item.type === 'text') {
+                        const labelEl = document.getElementById(item.labelId);
+                        if(labelEl) labelEl.innerText = item.def;
+                    }
+                });
+            }
+        }
+
+        window.onload = function() {
+            loadAllFromStorage();
+            if(sessionStorage.getItem('portfolio_admin_session') === 'authenticated') {
+                activateAdminMode();
+            }
+        };
+    </script>
+</body>
+</html>
