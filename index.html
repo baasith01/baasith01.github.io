@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arun Kumar | Portfolio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <style>
         :root {
             --primary-teal: #1cb8a1;
@@ -538,7 +536,7 @@
                         <label>Name:</label><input type="text" id="input-home-name" oninput="updateLiveText('lbl-home-name', this.value); updateLiveText('lbl-header-logo', this.value)">
                         <label>Title:</label><input type="text" id="input-home-title" oninput="updateLiveText('lbl-home-title', this.value)">
                         <label>Description:</label><textarea id="input-home-desc" oninput="updateLiveText('lbl-home-desc', this.value)"></textarea>
-                        <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage(this)">Save Home Changes</button>
+                        <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage()">Save Home Changes</button>
                     </div>
                 </div>
                 <div>
@@ -581,7 +579,7 @@
                     <div class="edit-controls">
                         <label>About Paragraph 1:</label><textarea id="input-about-p1" style="height:100px;" oninput="updateLiveText('lbl-about-p1', this.value)"></textarea>
                         <label>About Paragraph 2:</label><textarea id="input-about-p2" style="height:100px;" oninput="updateLiveText('lbl-about-p2', this.value)"></textarea>
-                        <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage(this)">Save About Details</button>
+                        <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage()">Save About Details</button>
                     </div>
                 </div>
             </div>
@@ -605,7 +603,7 @@
                     <input type="file" id="input-proj1-img" accept="image/*" onchange="handleImageUpload(this, 'img-proj-1', 'img_j1', true)">
                     <label>Title:</label><input type="text" id="input-proj1-title" oninput="updateLiveText('lbl-proj1-title', this.value)">
                     <label>Description:</label><textarea id="input-proj1-desc" oninput="updateLiveText('lbl-proj1-desc', this.value)"></textarea>
-                    <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage(this)">Save Project 1 Text</button>
+                    <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage()">Save Project 1 Text</button>
                 </div>
             </div>
             
@@ -620,7 +618,7 @@
                     <input type="file" id="input-proj2-img" accept="image/*" onchange="handleImageUpload(this, 'img-proj-2', 'img_j2', true)">
                     <label>Title:</label><input type="text" id="input-proj2-title" oninput="updateLiveText('lbl-proj2-title', this.value)">
                     <label>Description:</label><textarea id="input-proj2-desc" oninput="updateLiveText('lbl-proj2-desc', this.value)"></textarea>
-                    <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage(this)">Save Project 2 Text</button>
+                    <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage()">Save Project 2 Text</button>
                 </div>
             </div>
 
@@ -635,7 +633,7 @@
                     <input type="file" id="input-proj3-img" accept="image/*" onchange="handleImageUpload(this, 'img-proj-3', 'img_j3', true)">
                     <label>Title:</label><input type="text" id="input-proj3-title" oninput="updateLiveText('lbl-proj3-title', this.value)">
                     <label>Description:</label><textarea id="input-proj3-desc" oninput="updateLiveText('lbl-proj3-desc', this.value)"></textarea>
-                    <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage(this)">Save Project 3 Text</button>
+                    <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage()">Save Project 3 Text</button>
                 </div>
             </div>
         </div>
@@ -688,7 +686,7 @@
                     <div class="edit-controls">
                         <label>Contact Phone:</label>
                         <input type="text" id="input-contact-phone" oninput="updateLiveText('lbl-contact-phone', this.value)">
-                        <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage(this)">Save Contact Info</button>
+                        <button class="btn-teal" style="padding:4px 10px; font-size:12px; margin-top:5px;" onclick="saveAllToStorage()">Save Contact Info</button>
                     </div>
                 </div>
             </div>
@@ -723,7 +721,7 @@
                             <label><i class="fa-brands fa-linkedin-in"></i> LinkedIn URL:</label>
                             <input type="text" id="input-url-linkedin" style="width:100%; padding:6px; margin-top:4px;" oninput="document.getElementById('lnk-linkedin').href = this.value">
                         </div>
-                        <button class="btn-teal" style="width:100%; padding:8px; font-size:13px;" onclick="saveAllToStorage(this)">Save New Social Handles</button>
+                        <button class="btn-teal" style="width:100%; padding:8px; font-size:13px;" onclick="saveAllToStorage()">Save New Social Handles</button>
                     </div>
 
                     <button class="btn-teal" onclick="logoutAdmin()" style="width:100%; margin-top:20px; background:#555;">Securely Logout</button>
@@ -743,12 +741,6 @@
     </div>
 
     <script>
-        // Supabase Initialization Credentials
-        const SUPABASE_URL = "https://oigswmxqdtbxgqgyndbh.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9pZ3N3bXhxZHRieGdxZ3luZGJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMzc3NzksImV4cCI6MjA5NjgxMzc3OX0.C-iWTDiZMnw7iBaS_ST7mBmPV6ALMWeBj87dor4kMDA";
-
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
         function switchPage(sectionId, element) {
             const sections = document.querySelectorAll('.page-section');
             sections.forEach(sec => sec.classList.remove('active-page'));
@@ -823,14 +815,19 @@
             });
         }
 
-        // JavaScript File Reader Pipeline synchronized with Supabase
+        // Integrated Supabase Initializer Setup Block
+        const SUPABASE_URL = "https://ksvsundfhridqhewgqxn.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdnN1bmRmaHJpZHFoZXdncXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNDM1MTAsImV4cCI6MjA5NjgxOTUxMH0.h2GVhB_B7SWR2Va9PWBLBQJ9e41YLr9R1JvCKdqWmWU";
+        
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // JavaScript Async FileReader & Supabase Image Optimization Pipeline 
         function handleImageUpload(inputElement, targetDisplayId, storageKey, isBackground = false) {
             const file = inputElement.files[0];
             if (!file) return;
 
-            // Restrict base64 payloads on database records to keep performance smooth
-            if (file.size > 1.2 * 1024 * 1024) {
-                alert("Please optimize your asset size under 1.2MB to verify storage updates cleanly.");
+            if (file.size > 1.5 * 1024 * 1024) { 
+                alert("To avoid database row constraints on free tiers, keep images under 1.5MB.");
                 inputElement.value = "";
                 return;
             }
@@ -845,15 +842,16 @@
                     document.getElementById(targetDisplayId).src = base64Data;
                 }
 
+                // Upsert base64 image strings asynchronously directly to your Supabase cloud mapping table
                 try {
-                    const { error } = await supabaseClient
-                        .from('portfolio_content')
+                    const { error } = await supabase
+                        .from('portfolio_settings')
                         .upsert({ key: storageKey, value: base64Data }, { onConflict: 'key' });
                     
                     if (error) throw error;
-                    console.log("Image state asset pushed to cloud database successfully: " + storageKey);
+                    console.log(`Image saved to cloud under key: ${storageKey}`);
                 } catch(err) {
-                    console.error("Failed uploading image payload:", err.message);
+                    console.error("Failed uploading image string:", err.message);
                 }
             };
             reader.readAsDataURL(file);
@@ -900,7 +898,7 @@
             switchPage('home');
         }
 
-        // Cloud Core Key-Value Map configurations
+        // Map definitions for components, input connections, and keys
         const fieldsToMap = [
             { labelId: 'lbl-header-logo', inputId: 'input-home-name', key: 'p_name', def: 'Arun Kumar', type: 'text' },
             { labelId: 'lbl-home-greeting', inputId: 'input-home-greeting', key: 'p_greet', def: 'Hello I\'m', type: 'text' },
@@ -921,7 +919,7 @@
             { labelId: 'lbl-contact-email', inputId: 'input-contact-email', key: 'p_c_e', def: 'hello@johnsmith.com', type: 'text' },
             { labelId: 'lbl-contact-phone', inputId: 'input-contact-phone', key: 'p_c_p', def: '+1 (555) 019-2834', type: 'text' },
 
-            // Social links
+            // Social handles
             { elementId: 'lnk-facebook', inputId: 'input-url-facebook', key: 'url_fb', def: 'https://facebook.com', type: 'href' },
             { elementId: 'lnk-twitter', inputId: 'input-url-twitter', key: 'url_tw', def: 'https://twitter.com', type: 'href' },
             { elementId: 'lnk-instagram', inputId: 'input-url-instagram', key: 'url_ig', def: 'https://instagram.com', type: 'href' },
@@ -936,15 +934,8 @@
             { elementId: 'img-proj-3', key: 'img_j3', def: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=500&q=80', isBg: true }
         ];
 
-        // Global asynchronous bulk saving algorithm via Supabase Upsert
-        async function saveAllToStorage(btnElement) {
-            let originalText = "Save Changes";
-            if (btnElement) {
-                originalText = btnElement.innerText;
-                btnElement.disabled = true;
-                btnElement.innerText = "Syncing Cloud...";
-            }
-
+        // Asynchronous Supabase Cloud Synchronization Pipeline (Upsert Engine)
+        async function saveAllToStorage() {
             const updates = fieldsToMap.map(item => {
                 const inputEl = document.getElementById(item.inputId);
                 return {
@@ -954,81 +945,77 @@
             });
 
             try {
-                const { error } = await supabaseClient
-                    .from('portfolio_content')
+                const { error } = await supabase
+                    .from('portfolio_settings')
                     .upsert(updates, { onConflict: 'key' });
 
                 if (error) throw error;
-                alert('Cloud database updated successfully! Changes are live on all devices.');
+                alert('Cloud database synchronized successfully!');
             } catch (err) {
-                console.error("Cloud saving operation failure:", err.message);
-                alert('Synchronization Error: Make sure your RLS policies match database configurations.');
-            } finally {
-                if (btnElement) {
-                    btnElement.disabled = false;
-                    btnElement.innerText = originalText;
-                }
+                console.error("Cloud synchronization failed:", err.message);
+                alert('Failed to save configurations to Supabase. Check developer console.');
             }
         }
 
-        // Global asynchronous database read algorithm
+        // Asynchronous Data Restructuring Loader from Supabase Cloud
         async function loadAllFromStorage() {
             try {
-                const { data, error } = await supabaseClient
-                    .from('portfolio_content')
+                const { data, error } = await supabase
+                    .from('portfolio_settings')
                     .select('key, value');
 
                 if (error) throw error;
 
-                // Turn our query data rows array into a simple lookup object map
-                const contentMap = {};
-                if (data) {
+                if (data && data.length > 0) {
+                    const settingsMap = {};
                     data.forEach(row => {
-                        contentMap[row.key] = row.value;
+                        settingsMap[row.key] = row.value;
                     });
-                }
 
-                // Inject text configuration maps into document nodes
-                fieldsToMap.forEach(item => {
-                    const finalValue = contentMap[item.key] !== undefined ? contentMap[item.key] : item.def;
-                    
-                    const inputEl = document.getElementById(item.inputId);
-                    if(inputEl) inputEl.value = finalValue;
+                    fieldsToMap.forEach(item => {
+                        const liveValue = settingsMap[item.key] !== undefined ? settingsMap[item.key] : item.def;
+                        
+                        const inputEl = document.getElementById(item.inputId);
+                        if(inputEl) inputEl.value = liveValue;
 
-                    if(item.type === 'text') {
-                        const labelEl = document.getElementById(item.labelId);
-                        if(labelEl) labelEl.innerText = finalValue;
-                    } else if(item.type === 'href') {
-                        const anchorEl = document.getElementById(item.elementId);
-                        if(anchorEl) anchorEl.href = finalValue;
-                    }
-                });
-
-                // Inject layout asset maps into image fields nodes
-                imageFields.forEach(imgItem => {
-                    const finalData = contentMap[imgItem.key] !== undefined ? contentMap[imgItem.key] : imgItem.def;
-                    const element = document.getElementById(imgItem.elementId);
-                    if (element) {
-                        if (imgItem.isBg) {
-                            element.style.backgroundImage = `url('${finalData}')`;
-                        } else {
-                            element.src = finalData;
+                        if(item.type === 'text') {
+                            const labelEl = document.getElementById(item.labelId);
+                            if(labelEl) labelEl.innerText = liveValue;
+                        } else if(item.type === 'href') {
+                            const anchorEl = document.getElementById(item.elementId);
+                            if(anchorEl) anchorEl.href = liveValue;
                         }
-                    }
-                });
+                    });
 
+                    imageFields.forEach(imgItem => {
+                        const liveData = settingsMap[imgItem.key] !== undefined ? settingsMap[imgItem.key] : imgItem.def;
+                        const element = document.getElementById(imgItem.elementId);
+                        if (element) {
+                            if (imgItem.isBg) {
+                                element.style.backgroundImage = `url('${liveData}')`;
+                            } else {
+                                element.src = liveData;
+                            }
+                        }
+                    });
+                } else {
+                    applyDefaultConfigurationFallback();
+                }
             } catch (err) {
-                console.error("Cloud loading operation failure. Using fallback defaults:", err.message);
-                // Fallback default setup if connection is interrupted or row values are empty
-                fieldsToMap.forEach(item => {
-                    const inputEl = document.getElementById(item.inputId);
-                    if(inputEl) inputEl.value = item.def;
-                    if(item.type === 'text') {
-                        const labelEl = document.getElementById(item.labelId);
-                        if(labelEl) labelEl.innerText = item.def;
-                    }
-                });
+                console.error("Error retrieving live configurations from Supabase:", err.message);
+                applyDefaultConfigurationFallback();
             }
+        }
+
+        function applyDefaultConfigurationFallback() {
+            fieldsToMap.forEach(item => {
+                const inputEl = document.getElementById(item.inputId);
+                if(inputEl) inputEl.value = item.def;
+                if(item.type === 'text') {
+                    const labelEl = document.getElementById(item.labelId);
+                    if(labelEl) labelEl.innerText = item.def;
+                }
+            });
         }
 
         window.onload = function() {
